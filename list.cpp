@@ -6,6 +6,7 @@
 Data_list* get_pointer_list();
 void       list_ctor(Data_list* list);
 void       list_destroy(Data_list* list);
+void       fill_value(Data_list* list);
 
 int main()
 {
@@ -13,6 +14,8 @@ int main()
 
     list_ctor(list);
     
+    fill_value(list);
+
     dump(list);
 
     list_destroy(list);
@@ -75,4 +78,31 @@ void list_ctor(Data_list* list)
     list->data = (int*)calloc(INITIAL_SIZE_DATA, sizeof(int));
     list->next = (int*)calloc(INITIAL_SIZE_DATA, sizeof(int));
     list->prev = (int*)calloc(INITIAL_SIZE_DATA, sizeof(int));
+}
+
+void fill_value(Data_list* list)
+{
+    list->data[0]=0;
+    list->data[1]=10;
+    list->data[2]=20;
+    list->data[3]=30;
+    list->data[4]=40;
+    list->data[5]=50;
+    list->data[6]=25;
+
+    list->next[0]=0;
+    list->next[1]=2;
+    list->next[2]=6;
+    list->next[3]=4;
+    list->next[4]=5;
+    list->next[5]=0;
+    list->next[6]=3;
+
+    list->prev[0]=0;
+    list->prev[1]=0;
+    list->prev[2]=1;
+    list->prev[3]=6;
+    list->prev[4]=3;
+    list->prev[5]=4;
+    list->prev[6]=2;
 }
