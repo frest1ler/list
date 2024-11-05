@@ -7,6 +7,7 @@ struct Data_list
 {
     int  tail;
     int  head;
+    int  free;
     int* data;
     int* next;
     int* prev;
