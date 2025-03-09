@@ -8,10 +8,8 @@ void dump_print(int i, int* prev, int* data, int* next, FILE * point_to_file);
 void dump_align(FILE * point_to_file);
 void dump_connection(FILE * point_to_file, Data_list* list);
 
-void dump(Data_list* list)
+void dump(Data_list* list, char* fname)
 {
-    const char* fname = "data.dot";
-
     FILE * point_to_file = fopen(fname, "w");
 
     if (!point_to_file)
@@ -57,21 +55,22 @@ void dump_align(FILE * point_to_file)
 
 void dump_connection(FILE * point_to_file, Data_list* list)
 {
-    int i = 2;
-    int index = search_index_of_value(0, list->prev);
+     if (point_to_file == NULL) {
+        perror("Ошибка открытия файла");
+        return;
+    }
+
+    int index = 1;
     int index_bef = 0;
 
-    while(list->next[index] != 0)
+    while(list->next[index] != 0 && index < INITIAL_SIZE_DATA && list->data[index] != POISON_FREE)
     {
-        i++;
-
         index_bef = index;
 
-        index = search_index_of_value(i, list->next);
+        index = list->next[index];
 
-        fprintf(point_to_file, "%d -> %d [color = blue, weight = 0]\n", index_bef, index);
+        fprintf(point_to_file, "%d -> %d [color = blue, weight = 0];\n", index_bef, index);
     }
-    
 }
   //1 -> 2 [color = "#0000ff", weight = 0] //blue
   //3 -> 1 [color = "#0000ff", weight = 0]

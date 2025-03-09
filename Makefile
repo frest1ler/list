@@ -14,6 +14,10 @@ $(TARGET) : $(OBJ)
 %.o : %.cpp
 	$(CC) -c $< -o $@ $(CFLAGS)
 
+gen:
+	dot data.dot -T png -o data.png
+	dot data2.dot -T png -o data2.png
+
 .PHONY: clean
 clean:
 	rm $(TARGET) *.o
