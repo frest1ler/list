@@ -20,4 +20,25 @@ void add_el(int value, Data_list* list)
     (list->tail)++;
 }
 
-//void take_el()
+void take_el(int index, Data_list* list)
+{
+    if (list->data[index] == POISON_FREE || list->data[index] == POISON){
+        return;
+    }
+    else{
+        list->data[index] = POISON_FREE;
+
+        int prev = list->prev[index];
+        int next = list->next[index];   
+
+        if (prev != 0){
+            list->prev[next] = prev;
+        }
+        list->next[prev] = next;
+
+        if (prev != 0){
+            list->prev[list->free] = index;
+        }
+        list->next[index] = list->free;   
+    }
+}
