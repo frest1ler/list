@@ -77,7 +77,7 @@ void list_fill(Data_list* list)
     }
     list->next[INITIAL_SIZE_DATA - 1] = 0;
 
-    list->free = INITIAL_FREE_INDEX;
+    list->free = INITIAL_FREE_INDEX      ;
     list->head = HEAD_AND_TAIL_INIT_INDEX;
     list->tail = HEAD_AND_TAIL_INIT_INDEX;
 }

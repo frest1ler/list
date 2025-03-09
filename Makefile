@@ -15,8 +15,14 @@ $(TARGET) : $(OBJ)
 	$(CC) -c $< -o $@ $(CFLAGS)
 
 gen:
-	dot data.dot -T png -o data.png
-	dot data2.dot -T png -o data2.png
+	dot bata.dot -T png -o data.png
+	dot bata2.dot -T png -o data2.png
+	dot bata3.dot -T png -o data3.png
+	dot bata4.dot -T png -o data4.png
+	dot bata5.dot -T png -o data5.png
+	dot bata6.dot -T png -o data6.png
+	dot bata7.dot -T png -o data7.png
+	dot bata8.dot -T png -o data8.png
 
 .PHONY: clean
 clean:
