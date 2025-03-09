@@ -15,9 +15,7 @@ void add_el(int value, Data_list* list)
     list->prev[list->free] = list->tail;
     list->next[list->free] =          0;
 
-    if (list->tail != 0){
-        list->next[list->tail] = list->free;    
-    }
+    list->next[prev_free] = next_free;    
     list->prev[next_free] = prev_free;
 
     list->tail = max(list->tail, list->free);
