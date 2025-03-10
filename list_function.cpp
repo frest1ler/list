@@ -3,6 +3,7 @@
 #include "list_function.h"
 #include "dump.h"
 
+int search_new(int index, Data_list* list);
 int max(int a, int b);
 int min(int a, int b);
 
@@ -18,10 +19,6 @@ void add_el(int value, Data_list* list)
 
     if (list->tail != list->head)
     {
-        printf("add_el list->tail != list->head\n");
-        printf("add_el list->tail == %d\n", list->tail);
-        printf("add_el list->head == %d\n", list->head);
-
         list->prev[list->free] = list->tail;
         list->prev[list->head] = list->tail;
         list->next[list->tail] = list->free;
@@ -30,21 +27,24 @@ void add_el(int value, Data_list* list)
         list->tail = max(list->tail, list->free);
         list->head = min(list->head, list->free);
     }
-    else
+    else if (list->tail == 0)
     {
-        printf("add_el list->tail == list->head\n");
-
         list->prev[list->free] = list->free;
         list->next[list->free] = list->free;
 
-        list->tail = max(list->tail, list->free);
+        list->tail = list->free;
+        list->head = list->free;    
+    }
+    else
+    {
+        list->prev[list->head] = list->free;
+        list->next[list->head] = list->free;
+        
+        list->next[list->free] = list->head;
+        list->prev[list->free] = list->head;
 
-        if (list->head != 0){
-            list->head = min(list->head, list->free);
-        }
-        else{
-            list->head = list->free;    
-        }   
+        list->tail = max(list->tail, list->free);        
+        list->head = min(list->head, list->free);       
     }
     list->free = next_free;
 }
@@ -55,7 +55,10 @@ void take_el(int index, Data_list* list)
         return;
     }
     else if(list->tail != list->head)
-    {
+    {   
+        int new_tail = search_new(list->tail, list);
+        int new_head = search_new(list->head, list);
+
         printf("take_el list->tail != list->head\n");
         printf("take_el list->tail == %d\n", list->tail);
         printf("take_el list->head == %d\n", list->head);
@@ -71,11 +74,13 @@ void take_el(int index, Data_list* list)
         list->prev[list->free] = index;
         list->next[index] = list->free;
 
-        list->tail = max(list->tail, list->free);   
+        list->tail = new_tail;
+        list->head = new_head;   
     }
-    else if(list->tail == list->head)
+    else //if(list->tail == list->head)
     {
         printf("take el list->tail == list->head\n");
+        printf("add_el list->tail == %d\n", list->tail);
 
         list->data[index] = POISON_FREE;
 
@@ -85,7 +90,10 @@ void take_el(int index, Data_list* list)
         list->prev[index] = prev_free;
 
         list->prev[list->free] = index;
-        list->next[index] = list->free;    
+        list->next[index] = list->free;
+
+        list->head = 0;
+        list->tail = 0;    
     }
 }
 
@@ -103,4 +111,26 @@ int min(int a, int b)
         return b;
     }
     return a;
+}
+
+int search_new(int index, Data_list* list)
+{
+    if (index == list->head)
+    {   
+        index++;
+        while(index < INITIAL_SIZE_DATA && list->data[index] == POISON_FREE){
+            index++;
+        }
+        return index;
+    }
+    else if (index == list->tail)
+    {   
+        index--;
+        while(index > 0 && list->data[index] == POISON_FREE){
+            index--;
+        }
+        return index;
+    }
+    printf("\nThis operation is not yet provided in the search_new function\n");
+    return 0;
 }
