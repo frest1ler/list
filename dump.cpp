@@ -63,13 +63,16 @@ void dump_connection(FILE * point_to_file, Data_list* list)
     int index = 1;
     int index_bef = 0;
 
-    while(list->next[index] != 0 && index < INITIAL_SIZE_DATA && list->data[index] != POISON_FREE)
+    while(list->next[index] != 0 && index < INITIAL_SIZE_DATA && list->data[index] != POISON_FREE && 
+          index != index_bef)
     {
         index_bef = index;
 
         index = list->next[index];
 
-        fprintf(point_to_file, "%d -> %d [color = blue, weight = 0];\n", index_bef, index);
+        if (index_bef != index){
+            fprintf(point_to_file, "%d -> %d [color = blue, weight = 0];\n", index_bef, index);
+        }
     }
 }
   //1 -> 2 [color = "#0000ff", weight = 0] //blue

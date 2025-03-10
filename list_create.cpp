@@ -65,16 +65,13 @@ void list_ctor(Data_list* list)
 
 void list_fill(Data_list* list)
 {
-    list->next[0] = POISON;
-    list->prev[0] = POISON;
-    list->data[0] = POISON;
-
-    for(int i = 1; i < INITIAL_SIZE_DATA; i++)
+    for(int i = 0; i < INITIAL_SIZE_DATA; i++)
     {
         list->data[i] = POISON_FREE;
         list->next[i] = i + 1;
         list->prev[i] = i - 1;
     }
+    list->prev[0] = INITIAL_SIZE_DATA - 1;
     list->next[INITIAL_SIZE_DATA - 1] = 0;
 
     list->free = INITIAL_FREE_INDEX      ;
