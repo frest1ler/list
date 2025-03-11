@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <assert.h>
 #include "list_function.h"
 #include "dump.h"
 
@@ -8,56 +9,55 @@ int min(int a, int b);
 
 void add_end(int value, Data_list* list)
 {
-    printf("add_end value=%d, free=%d\n", value, list->free);
+    assert(list);
+    assert(list->data);
+    assert(list->prev);
+    assert(list->next);
 
     list->data[list->free] = value;
-
+    
     int next_free = list->next[list->free];
     int prev_free = list->prev[list->free];
 
     list->next[prev_free] = next_free;    
     list->prev[next_free] = prev_free;
 
-    list->prev[list->free] = list->tail;
-    list->next[list->tail] = list->free;
-    list->next[list->free] = POISON;
+    if (list->tail != list->head)
+    {   
+        list->next[list->tail] = list->free;
+        list->prev[list->free] = list->tail;
+        list->next[list->free] =     POISON;
+
+        list->tail = list->free;
+    }
+    else if (list->tail == POISON)
+    {   
+        list->next[list->free] = POISON;
+        list->prev[list->free] = POISON;
+
+        list->head = list->free;
+    }
+    else
+    {
+        list->next[list->free] =     POISON;
+        list->prev[list->free] = list->tail;
+
+        list->next[list->head] = list->free;
+        list->prev[list->head] =     POISON;   
+    }
 
     list->tail = list->free;
 
-    // if (list->tail != list->head)
-    // {
-    //     list->prev[list->free] = list->tail;
-    //     list->prev[list->head] = list->tail;
-    //     list->next[list->tail] = list->free;
-    //     list->next[list->free] = list->head;
-
-    //     list->tail = max(list->tail, list->free);
-    //     list->head = min(list->head, list->free);
-    // }
-    // else if (list->tail == 0)
-    // {
-    //     list->prev[list->free] = list->free;
-    //     list->next[list->free] = list->free;
-
-    //     list->tail = list->free;
-    //     list->head = list->free;    
-    // }
-    // else
-    // {
-    //     list->prev[list->head] = list->free;
-    //     list->next[list->head] = list->free;
-        
-    //     list->next[list->free] = list->head;
-    //     list->prev[list->free] = list->head;
-
-    //     list->tail = max(list->tail, list->free);        
-    //     list->head = min(list->head, list->free);       
-    // }
     list->free = next_free;
 }
 
 void add_begin(int value, Data_list* list)
 {   
+    assert(list);
+    assert(list->data);
+    assert(list->prev);
+    assert(list->next);
+
     printf("add_begin value=%d, free=%d\n", value, list->free);
 
     list->data[list->free] = value;
@@ -68,12 +68,32 @@ void add_begin(int value, Data_list* list)
     list->next[prev_free] = next_free;    
     list->prev[next_free] = prev_free;
 
-    list->prev[list->head] = list->free;
-    list->next[list->free] = list->head;
-    list->prev[list->free] = POISON;
+    if (list->tail != list->head)
+    {
+        list->prev[list->head] = list->free;
+        list->next[list->free] = list->head;
+        list->prev[list->free] = POISON;
 
-    list->head = list->free;
+        list->head = list->free;
+    }
+    else if (list->tail == POISON)
+    {
+        list->prev[list->free] = POISON;
+        list->next[list->free] = POISON;
 
+        list->head = list->free;
+        list->tail = list->free;
+    }
+    else
+    {
+        list->next[list->free] = list->head;
+        list->prev[list->free] =     POISON;
+
+        list->next[list->head] =     POISON;
+        list->prev[list->head] = list->free;
+
+        list->head = list->free;
+    }
     list->free = next_free;
 }
 
