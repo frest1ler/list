@@ -3,12 +3,13 @@
 #include "list_function.h"
 #include "dump.h"
 
-int search_new(int index, Data_list* list);
 int max(int a, int b);
 int min(int a, int b);
 
-void add_el(int value, Data_list* list)
+void add_end(int value, Data_list* list)
 {
+    printf("add_end value=%d, free=%d\n", value, list->free);
+
     list->data[list->free] = value;
 
     int next_free = list->next[list->free];
@@ -17,35 +18,62 @@ void add_el(int value, Data_list* list)
     list->next[prev_free] = next_free;    
     list->prev[next_free] = prev_free;
 
-    if (list->tail != list->head)
-    {
-        list->prev[list->free] = list->tail;
-        list->prev[list->head] = list->tail;
-        list->next[list->tail] = list->free;
-        list->next[list->free] = list->head;
+    list->prev[list->free] = list->tail;
+    list->next[list->tail] = list->free;
+    list->next[list->free] = POISON;
 
-        list->tail = max(list->tail, list->free);
-        list->head = min(list->head, list->free);
-    }
-    else if (list->tail == 0)
-    {
-        list->prev[list->free] = list->free;
-        list->next[list->free] = list->free;
+    list->tail = list->free;
 
-        list->tail = list->free;
-        list->head = list->free;    
-    }
-    else
-    {
-        list->prev[list->head] = list->free;
-        list->next[list->head] = list->free;
+    // if (list->tail != list->head)
+    // {
+    //     list->prev[list->free] = list->tail;
+    //     list->prev[list->head] = list->tail;
+    //     list->next[list->tail] = list->free;
+    //     list->next[list->free] = list->head;
+
+    //     list->tail = max(list->tail, list->free);
+    //     list->head = min(list->head, list->free);
+    // }
+    // else if (list->tail == 0)
+    // {
+    //     list->prev[list->free] = list->free;
+    //     list->next[list->free] = list->free;
+
+    //     list->tail = list->free;
+    //     list->head = list->free;    
+    // }
+    // else
+    // {
+    //     list->prev[list->head] = list->free;
+    //     list->next[list->head] = list->free;
         
-        list->next[list->free] = list->head;
-        list->prev[list->free] = list->head;
+    //     list->next[list->free] = list->head;
+    //     list->prev[list->free] = list->head;
 
-        list->tail = max(list->tail, list->free);        
-        list->head = min(list->head, list->free);       
-    }
+    //     list->tail = max(list->tail, list->free);        
+    //     list->head = min(list->head, list->free);       
+    // }
+    list->free = next_free;
+}
+
+void add_begin(int value, Data_list* list)
+{   
+    printf("add_begin value=%d, free=%d\n", value, list->free);
+
+    list->data[list->free] = value;
+
+    int next_free = list->next[list->free];
+    int prev_free = list->prev[list->free];
+
+    list->next[prev_free] = next_free;    
+    list->prev[next_free] = prev_free;
+
+    list->prev[list->head] = list->free;
+    list->next[list->free] = list->head;
+    list->prev[list->free] = POISON;
+
+    list->head = list->free;
+
     list->free = next_free;
 }
 
@@ -56,8 +84,8 @@ void take_el(int index, Data_list* list)
     }
     else if(list->tail != list->head)
     {   
-        int new_tail = search_new(list->tail, list);
-        int new_head = search_new(list->head, list);
+        //int new_tail = search_new(list->tail, list);
+        //int new_head = search_new(list->head, list);
 
         printf("take_el list->tail != list->head\n");
         printf("take_el list->tail == %d\n", list->tail);
@@ -74,8 +102,8 @@ void take_el(int index, Data_list* list)
         list->prev[list->free] = index;
         list->next[index] = list->free;
 
-        list->tail = new_tail;
-        list->head = new_head;   
+        //list->tail = new_tail;
+        //list->head = new_head;   
     }
     else //if(list->tail == list->head)
     {
@@ -111,26 +139,4 @@ int min(int a, int b)
         return b;
     }
     return a;
-}
-
-int search_new(int index, Data_list* list)
-{
-    if (index == list->head)
-    {   
-        index++;
-        while(index < INITIAL_SIZE_DATA && list->data[index] == POISON_FREE){
-            index++;
-        }
-        return index;
-    }
-    else if (index == list->tail)
-    {   
-        index--;
-        while(index > 0 && list->data[index] == POISON_FREE){
-            index--;
-        }
-        return index;
-    }
-    printf("\nThis operation is not yet provided in the search_new function\n");
-    return 0;
 }

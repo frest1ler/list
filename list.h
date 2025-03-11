@@ -4,7 +4,7 @@
 const int INITIAL_SIZE_DATA        =   10;
 const int INITIAL_FREE_INDEX       =    1;
 const int POISON_FREE              = -333;
-const int HEAD_AND_TAIL_INIT_INDEX =    0;
+const int POISON                   =   -1;
 
 struct Data_list
 {

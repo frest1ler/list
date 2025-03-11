@@ -60,10 +60,10 @@ void dump_connection(FILE * point_to_file, Data_list* list)
         return;
     }
 
-    int index = 1;
+    int index = list->head;
     int index_bef = 0;
 
-    while(list->next[index] != 0 && index < INITIAL_SIZE_DATA && list->data[index] != POISON_FREE && 
+    while(list->next[index] != POISON && index < INITIAL_SIZE_DATA && list->data[index] != POISON_FREE && 
           index != index_bef)
     {
         index_bef = index;
