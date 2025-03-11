@@ -7,7 +7,8 @@ const int POISON_FREE              = -333;
 const int POISON                   =   -1;
 
 struct Data_list
-{
+{   
+    int  size;
     int  tail;
     int  head;
     int  free;

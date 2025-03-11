@@ -4,15 +4,16 @@
 #include "list_function.h"
 #include "dump.h"
 
-int max(int a, int b);
-int min(int a, int b);
-
 void add_end(int value, Data_list* list)
 {
     assert(list);
     assert(list->data);
     assert(list->prev);
     assert(list->next);
+
+    if (list->size == INITIAL_SIZE_DATA - 1){
+        perror("No more elements will fit");
+    }
 
     list->data[list->free] = value;
     
@@ -49,6 +50,8 @@ void add_end(int value, Data_list* list)
     list->tail = list->free;
 
     list->free = next_free;
+
+    (list->size)++;
 }
 
 void add_begin(int value, Data_list* list)
@@ -58,7 +61,9 @@ void add_begin(int value, Data_list* list)
     assert(list->prev);
     assert(list->next);
 
-    printf("add_begin value=%d, free=%d\n", value, list->free);
+    if (list->size == INITIAL_SIZE_DATA - 1){
+        perror("No more elements will fit");
+    }
 
     list->data[list->free] = value;
 
@@ -95,68 +100,50 @@ void add_begin(int value, Data_list* list)
         list->head = list->free;
     }
     list->free = next_free;
+
+    (list->size)++;
 }
 
 void take_el(int index, Data_list* list)
 {
+    int prev_free = list->prev[list->free];
+
     if (list->data[index] == POISON_FREE){
         return;
     }
-    else if(list->tail != list->head)
-    {   
-        //int new_tail = search_new(list->tail, list);
-        //int new_head = search_new(list->head, list);
-
-        printf("take_el list->tail != list->head\n");
-        printf("take_el list->tail == %d\n", list->tail);
-        printf("take_el list->head == %d\n", list->head);
-
-        list->data[index] = POISON_FREE;
-
-        int prev = list->prev[index];
-        int next = list->next[index];   
-
-        list->prev[next] = prev;
-        list->next[prev] = next;
-
-        list->prev[list->free] = index;
-        list->next[index] = list->free;
-
-        //list->tail = new_tail;
-        //list->head = new_head;   
-    }
-    else //if(list->tail == list->head)
+    else if (index == list->tail && list->head == list->tail)
     {
-        printf("take el list->tail == list->head\n");
-        printf("add_el list->tail == %d\n", list->tail);
-
-        list->data[index] = POISON_FREE;
-
-        int prev_free = list->prev[list->free];
-
-        list->next[prev_free] = index;
-        list->prev[index] = prev_free;
-
-        list->prev[list->free] = index;
-        list->next[index] = list->free;
-
-        list->head = 0;
-        list->tail = 0;    
+        list->head = POISON;
+        list->tail = POISON;
     }
-}
+    else if (index == list->tail)
+    {
+        int prev_el = list->prev[index];
+        list->next[prev_el] = POISON;
 
-int max(int a, int b)
-{
-    if (a > b){
-        return a;
+        list->tail = prev_el;
     }
-    return b;
-}
+    else if (index == list->head)
+    {
+        int next_el = list->next[index];
+        list->prev[next_el] = POISON;
 
-int min(int a, int b)
-{
-    if (a == max(a, b)){
-        return b;
+        list->head = next_el;
     }
-    return a;
-}
+    else
+    {
+        int prev_el = list->prev[index];
+        int next_el = list->next[index];
+
+        list->next[prev_el] = next_el;
+        list->prev[next_el] = prev_el;
+    }   
+    list->data[index] = POISON_FREE;
+    list->next[index] =  list->free;
+    list->prev[index] =   prev_free;
+    
+    list->next[prev_free] =  index;
+    list->prev[list->free] = index;
+
+    (list->size)--;
+}   

@@ -11,22 +11,26 @@ int main()
 
     list_ctor(list);
 
-    add_begin(25, list);
+    add_end(25, list);
     dump(list, "bata.dot");
-    add_begin(25, list);
+    add_end(25, list);
     dump(list, "bata2.dot");
-    add_begin(25, list);
+    add_end(25, list);
     dump(list, "bata3.dot");
-    add_begin(25, list);
+    add_end(25, list);
     dump(list, "bata4.dot");
-    add_begin(25, list);
+    add_end(25, list);
     dump(list, "bata5.dot");
-    add_begin(25, list);
+    add_end(25, list);
     dump(list, "bata6.dot");
-    add_begin(25, list);
+    add_end(25, list);
     dump(list, "bata7.dot");
-    add_begin(2, list);
+    add_end(2, list);
     dump(list, "bata8.dot");
+    add_end(25, list);
+    dump(list, "bata9.dot");
+    take_el(5, list);
+    dump(list, "bata10.dot");
 
     list_destroy(list);
     

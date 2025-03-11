@@ -23,6 +23,8 @@ gen:
 	dot bata6.dot -T png -o data6.png
 	dot bata7.dot -T png -o data7.png
 	dot bata8.dot -T png -o data8.png
+	dot bata9.dot -T png -o data9.png
+	dot bata10.dot -T png -o data10.png
 
 .PHONY: clean
 clean:
